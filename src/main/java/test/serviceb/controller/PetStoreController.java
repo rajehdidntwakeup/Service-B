@@ -9,9 +9,9 @@ import test.serviceb.repository.SellingRepository;
 
 import java.util.List;
 
-@CrossOrigin(origins = "http://localhost:8080")
 @RestController()
 @RequestMapping("/store")
+@CrossOrigin(origins = "http://localhost:8080", allowedHeaders = "*")
 public class PetStoreController {
 
     private final WebClient webClient;
@@ -51,3 +51,6 @@ public class PetStoreController {
         }
     }
 }
+
+
+
