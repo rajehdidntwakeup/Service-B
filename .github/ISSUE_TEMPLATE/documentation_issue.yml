@@ -1,0 +1,37 @@
+name: Documentation Update
+description: Propose changes or additions to project documentation
+title: "[Docs]: "
+labels: [documentation]
+
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Documentation Title
+      description: Short title for this documentation task
+      placeholder: e.g. Update README with latest steps
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: Explain what part of the documentation needs updating or creating.
+      placeholder: Describe the problem or new content needed in detail...
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      description: Provide a **checklist** of conditions that must be met.
+      placeholder: |
+        - [ ] README updated with Java 24 runtime requirements
+        - [ ] Security configuration section added with CORS details
+        - [ ] H2 database setup instructions updated
+        - [ ] REST endpoints documentation refreshed with latest examples
+        - [ ] Project structure and dependencies list updated
+    validations:
+      required: true

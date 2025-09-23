@@ -1,0 +1,35 @@
+name: Setup Issue
+description: Track setup-related tasks with clear acceptance criteria
+title: "[Setup]: "
+labels: [setup]
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Setup Task Title
+      description: Short title for this setup-related issue
+      placeholder: e.g. Setup a java maven project..
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of the setup task.
+      placeholder: Explain the setup requirement in detail...
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      description: Provide a **checklist** of conditions that must be met for setup to be complete.
+      placeholder: |
+        - [ ] Create a Spring Boot project
+        - [ ] Add Java 24
+        - [ ] Add Maven
+        - [ ] Add fundamental dependencies
+    validations:
+      required: true
