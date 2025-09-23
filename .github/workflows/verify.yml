@@ -7,6 +7,19 @@ on:
       - master
 
 jobs:
+  conform:
+    runs-on: ubuntu-latest
+    name: Conform
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - uses: siderolabs/conform@v0.1.0-alpha.27
+        with:
+          token: ${{ secrets.CONFORM }}
+
   build:
     runs-on: ubuntu-latest
     steps:
