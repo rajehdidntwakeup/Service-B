@@ -1,0 +1,41 @@
+name: Feature Issue
+description: Suggest a new feature with clear acceptance criteria
+title: "[Feature]: "
+labels: [enhancement]
+body:
+  - type: input
+    id: title
+    attributes:
+      label: Feature Title
+      description: Short title for this feature
+      placeholder: e.g. Create REST Controller
+    validations:
+      required: true
+
+  - type: textarea
+    id: description
+    attributes:
+      label: Description
+      description: A clear and concise description of what you want to happen.
+      placeholder: Explain the feature in detail...
+    validations:
+      required: true
+
+  - type: textarea
+    id: acceptance_criteria
+    attributes:
+      label: Acceptance Criteria
+      description: Provide a **checklist** of conditions that must be met.
+      placeholder: |
+        - [ ] REST Controller is created with proper request mapping
+        - [ ] Implements GET endpoint to retrieve all resources
+        - [ ] Implements GET endpoint to retrieve resource by ID
+        - [ ] Implements POST endpoint to create new resource
+        - [ ] Implements PUT endpoint to update existing resource
+        - [ ] Implements DELETE endpoint to remove resource
+        - [ ] Returns appropriate HTTP status codes (200, 201, 404, etc.)
+        - [ ] Includes proper request/response validation
+        - [ ] Has comprehensive error handling
+        - [ ] Has unit tests
+    validations:
+      required: true
