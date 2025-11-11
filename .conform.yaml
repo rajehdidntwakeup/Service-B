@@ -3,7 +3,7 @@ policies:
   - type: commit
     spec:
       header:
-        length: 200
+        length: 100
         imperative: true
         case: lower
         invalidLastCharacters: .
@@ -16,10 +16,29 @@ policies:
       maximumOfOneCommit: false
       conventional:
         types:
+          - feat
+          - fix
           - refactor
+          - perf
           - chore
+          - test
           - docs
+          - no_type
         scopes:
+          - config
+          - service
+          - repository
+          - controller
+          - entity
+          - dto
+          - plugin
+          - pom
+          - database
+          - docker
+          - release
+          - deployment
           - deps
           - ci
+          - license
+          - readme
         descriptionLength: 100

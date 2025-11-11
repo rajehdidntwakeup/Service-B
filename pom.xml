@@ -145,14 +145,10 @@
                 <configuration>
                     <effort>Max</effort> <!-- Thorough analysis; use 'Min' for faster CI runs -->
                     <threshold>Low</threshold> <!-- Low for more detections; adjust to 'Medium' if noisy -->
-                    <xmlOutput>false</xmlOutput> <!-- For CI/CD parsing -->
-                    <sarifOutput>true</sarifOutput>
-                    <sarifOutputDirectory>target/spotbugs
-                    </sarifOutputDirectory>  <!-- Optional: Aligns with your XML output dir for consistency -->
-                    <sarifOutputFilename>spotbugs.sarif
-                    </sarifOutputFilename>     <!-- Optional: Custom filename; defaults to spotbugsSarif.json -->
-
-                    <failOnError>false</failOnError> <!-- Set to true to fail builds on issues -->
+                    <xmlOutput>true</xmlOutput> <!-- For CI/CD parsing -->
+                    <xmlOutputDirectory>target/spotbugs</xmlOutputDirectory>
+                    <spotbugsXmlOutputFilename>spotbugs.xml</spotbugsXmlOutputFilename>
+                    <failOnError>true</failOnError> <!-- Set to true to fail builds on issues -->
                 </configuration>
             </plugin>
         </plugins>

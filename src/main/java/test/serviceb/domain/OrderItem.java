@@ -7,6 +7,12 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 
+/**
+ * Represents an item entity within an order.
+ * This class defines the structure and behavior of an order item and includes
+ * details such as the item's identifier, name, quantity, price, and the associated order.
+ * It is annotated with JPA annotations to facilitate database persistence.
+ */
 @Entity
 public class OrderItem {
 
@@ -24,6 +30,14 @@ public class OrderItem {
    * to identify a specific item within the context of an order.
    */
   private int itemId;
+
+
+  /**
+   * Represents the name of the item in the context of an order.
+   * This field stores a human-readable, descriptive name for the item, which
+   * can be used for display purposes or in user-facing operations.
+   */
+  private String itemName;
 
   /**
    * Represents the quantity of a specific item in an order.
@@ -56,14 +70,16 @@ public class OrderItem {
   }
 
   /**
-   * Constructs an instance of the OrderItem class with the specified item ID, quantity, and price.
+   * Constructs an instance of the OrderItem class with specified details.
    *
-   * @param itemId   the unique identifier of the item
-   * @param quantity the quantity of the item
-   * @param price    the price of the item
+   * @param itemId   the unique identifier for the item
+   * @param itemName the name of the item
+   * @param quantity the quantity of the item in the order
+   * @param price    the price of an individual item
    */
-  public OrderItem(int itemId, int quantity, double price) {
+  public OrderItem(int itemId, String itemName, int quantity, double price) {
     this.itemId = itemId;
+    this.itemName = itemName;
     this.quantity = quantity;
     this.price = price;
   }
@@ -93,6 +109,25 @@ public class OrderItem {
    */
   public void setItemId(int itemId) {
     this.itemId = itemId;
+  }
+
+
+  /**
+   * Retrieves the name of the item associated with this order item.
+   *
+   * @return the name of the item as a String
+   */
+  public String getItemName() {
+    return itemName;
+  }
+
+  /**
+   * Updates the name of the item associated with this order item.
+   *
+   * @param itemName the new name of the item to be set
+   */
+  public void setItemName(String itemName) {
+    this.itemName = itemName;
   }
 
   /**

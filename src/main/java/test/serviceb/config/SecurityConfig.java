@@ -13,9 +13,24 @@ import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
 import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+/**
+ * The SecurityConfig class is a configuration class that sets up Spring Security
+ * features such as authentication, authorization, CSRF, CORS, and other related
+ * security settings for the application.
+ * This class utilizes Spring's Java Config support and defines beans for configuring
+ * the application's security filter chain and CORS settings.
+ */
 @Configuration
 public class SecurityConfig {
 
+  /**
+   * Configures the security filter chain for the application, setting up CSRF, CORS,
+   * and authorization rules.
+   *
+   * @param http the {@link HttpSecurity} object used to configure security for the application
+   * @return the configured {@link SecurityFilterChain} to be used by the application
+   * @throws Exception if an error occurs while building the security configuration
+   */
   @Bean
   public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
     http
@@ -32,6 +47,13 @@ public class SecurityConfig {
     return http.build();
   }
 
+  /**
+   * Configures and provides a {@link CorsConfigurationSource} for handling Cross-Origin Resource Sharing (CORS)
+   * settings in the application. This method sets up CORS policies such as allowed origin patterns, HTTP methods,
+   * headers, exposed headers, credentials support, and cache duration.
+   *
+   * @return a {@link CorsConfigurationSource} instance configured with CORS policies for the application
+   */
   @Bean
   public CorsConfigurationSource corsConfigurationSource() {
     CorsConfiguration configuration = new CorsConfiguration();

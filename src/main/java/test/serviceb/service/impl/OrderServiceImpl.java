@@ -18,13 +18,24 @@ import test.serviceb.repository.OrderItemRepository;
 import test.serviceb.repository.OrdersRepository;
 import test.serviceb.service.OrderService;
 
+/**
+ * The OrderServiceImpl class implements the OrderService interface.
+ */
 @Service
 public class OrderServiceImpl implements OrderService {
 
   private final WebClient webClient;
-  private OrdersRepository ordersRepository;
-  private OrderItemRepository orderItemRepository;
+  private final OrdersRepository ordersRepository;
+  private final OrderItemRepository orderItemRepository;
 
+  /**
+   * Constructs an instance of the OrderServiceImpl class.
+   *
+   * @param ordersRepository    the OrdersRepository instance used to manage orders.
+   * @param orderItemRepository the OrderItemRepository instance used to manage order items.
+   * @param builder             the WebClient.Builder instance used to configure and build a WebClient for interacting
+   *                            with the inventory API.
+   */
   public OrderServiceImpl(OrdersRepository ordersRepository, OrderItemRepository orderItemRepository,
                           WebClient.Builder builder) {
     this.ordersRepository = ordersRepository;
@@ -90,7 +101,7 @@ public class OrderServiceImpl implements OrderService {
 
   private OrderItem createOrderItem(OrderItemDto itemDto) {
     try {
-      Item item = webClient.get().uri("/{id}", itemDto.getItemId())
+      Item item = webClient.get().uri("/{id}/itemname/{name}", itemDto.getItemId(), itemDto.getItemName())
           .retrieve().bodyToMono(Item.class).block();
       if (item == null) {
         throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Item with ID " + itemDto.getItemId() + " not found");
@@ -106,7 +117,7 @@ public class OrderServiceImpl implements OrderService {
       inventoryItemDto.setDescription(item.getDescription());
       webClient.put().uri("/{id}", itemDto.getItemId()).bodyValue(inventoryItemDto)
           .retrieve().bodyToMono(InventoryItemDto.class).block();
-      return new OrderItem(item.getId(), itemDto.getQuantity(), itemDto.getPrice());
+      return new OrderItem(item.getId(), item.getName(), itemDto.getQuantity(), itemDto.getPrice());
     } catch (Exception e) {
       throw new RuntimeException("Failed to fetch item with ID: " + itemDto.getItemId(), e);
     }
