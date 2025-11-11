@@ -25,8 +25,8 @@ import test.serviceb.service.OrderService;
 public class OrderServiceImpl implements OrderService {
 
   private final WebClient webClient;
-  private final OrdersRepository ordersRepository;
-  private final OrderItemRepository orderItemRepository;
+  private final OrdersRepository ordersRepo;
+  private final OrderItemRepository orderItemRepo;
 
   /**
    * Constructs an instance of the OrderServiceImpl class.
@@ -38,8 +38,8 @@ public class OrderServiceImpl implements OrderService {
    */
   public OrderServiceImpl(OrdersRepository ordersRepository, OrderItemRepository orderItemRepository,
                           WebClient.Builder builder) {
-    this.ordersRepository = ordersRepository;
-    this.orderItemRepository = orderItemRepository;
+    this.ordersRepo = ordersRepository;
+    this.orderItemRepo = orderItemRepository;
     this.webClient = builder.baseUrl("http://localhost:8080/api/inventory").build();
   }
 
@@ -52,18 +52,18 @@ public class OrderServiceImpl implements OrderService {
       OrderItem orderItem = createOrderItem(itemDto);
       newOrder.addOrderItem(orderItem);
     }
-    return ordersRepository.save(newOrder);
+    return ordersRepo.save(newOrder);
   }
 
   @Override
   public Orders getOrder(int orderId) {
-    Optional<Orders> order = ordersRepository.findById(orderId);
+    Optional<Orders> order = ordersRepo.findById(orderId);
     return order.orElse(null);
   }
 
   @Override
   public List<Orders> getAllOrders() {
-    List<Orders> orders = ordersRepository.findAll();
+    List<Orders> orders = ordersRepo.findAll();
     if (!orders.isEmpty()) {
       return orders;
     }
@@ -72,7 +72,7 @@ public class OrderServiceImpl implements OrderService {
 
   @Override
   public Orders updateOrder(int orderId, OrderDto order) {
-    Optional<Orders> orderOptional = ordersRepository.findById(orderId);
+    Optional<Orders> orderOptional = ordersRepo.findById(orderId);
     if (orderOptional.isPresent()) {
       Orders orderToUpdate = orderOptional.get();
 
@@ -93,7 +93,7 @@ public class OrderServiceImpl implements OrderService {
           orderToUpdate.addOrderItem(orderItem);
         }
       }
-      return ordersRepository.save(orderToUpdate);
+      return ordersRepo.save(orderToUpdate);
     }
     return null;
   }
