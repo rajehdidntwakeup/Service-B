@@ -17,6 +17,7 @@
         <exclude name="LocalVariableCouldBeFinal"/>
         <exclude name="OnlyOneReturn"/>
         <exclude name="ShortVariable"/>
+        <exclude name="ShortClassName"/>
     </rule>
 
     <!-- Error prevention -->

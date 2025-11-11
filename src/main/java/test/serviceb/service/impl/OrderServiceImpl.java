@@ -1,6 +1,7 @@
 package test.serviceb.service.impl;
 
 import java.util.List;
+import java.util.Locale;
 import java.util.Optional;
 
 import org.springframework.http.HttpStatus;
@@ -31,15 +32,15 @@ public class OrderServiceImpl implements OrderService {
   /**
    * Constructs an instance of the OrderServiceImpl class.
    *
-   * @param ordersRepository    the OrdersRepository instance used to manage orders.
-   * @param orderItemRepository the OrderItemRepository instance used to manage order items.
-   * @param builder             the WebClient.Builder instance used to configure and build a WebClient for interacting
-   *                            with the inventory API.
+   * @param ordersRepo    the OrdersRepository instance used to manage orders.
+   * @param orderItemRepo the OrderItemRepository instance used to manage order items.
+   * @param builder       the WebClient.Builder instance used to configure and build a WebClient for interacting
+   *                      with the inventory API.
    */
-  public OrderServiceImpl(OrdersRepository ordersRepository, OrderItemRepository orderItemRepository,
+  public OrderServiceImpl(OrdersRepository ordersRepo, OrderItemRepository orderItemRepo,
                           WebClient.Builder builder) {
-    this.ordersRepo = ordersRepository;
-    this.orderItemRepo = orderItemRepository;
+    this.ordersRepo = ordersRepo;
+    this.orderItemRepo = orderItemRepo;
     this.webClient = builder.baseUrl("http://localhost:8080/api/inventory").build();
   }
 
@@ -123,28 +124,50 @@ public class OrderServiceImpl implements OrderService {
     }
   }
 
+  /**
+   * Restocks the items in an order by updating their stock quantities in the inventory system.
+   * This method processes each order item using a reactive pipeline, ensures the item's stock
+   * is adjusted based on the quantity in the order, and handles concurrency to avoid overloading
+   * the inventory service.
+   *
+   * @param order the order containing items to be restocked with their respective quantities.
+   */
   private void restockOrderItems(Orders order) {
-    for (OrderItem orderItem : order.getOrderItems()) {
-      try {
-        Item item = webClient.get().uri("/{id}", orderItem.getItemId())
-            .retrieve().bodyToMono(Item.class).block();
-        if (item != null) {
-          InventoryItemDto inventoryItemDto = new InventoryItemDto();
-          inventoryItemDto.setName(item.getName());
-          inventoryItemDto.setPrice(item.getPrice());
-          inventoryItemDto.setStock(item.getStock() + orderItem.getQuantity());
-          inventoryItemDto.setDescription(item.getDescription());
-          webClient.put().uri("/{id}", orderItem.getItemId()).bodyValue(inventoryItemDto)
-              .retrieve().bodyToMono(InventoryItemDto.class).block();
-        }
-      } catch (Exception e) {
-        throw new RuntimeException("Failed to restock item with ID: " + orderItem.getItemId(), e);
-      }
-    }
+    // Optimize by using a reactive pipeline with limited concurrency instead of per-item blocking calls
+    reactor.core.publisher.Flux.fromIterable(order.getOrderItems())
+        .flatMap(orderItem ->
+            webClient.get().uri("/{id}", orderItem.getItemId())
+                .retrieve()
+                .bodyToMono(Item.class)
+                .switchIfEmpty(reactor.core.publisher.Mono.error(
+                    new ResponseStatusException(HttpStatus.NOT_FOUND,
+                        "Item with ID " + orderItem.getItemId() + " not found")))
+                .flatMap(item -> {
+                  InventoryItemDto inventoryItemDto = new InventoryItemDto();
+                  inventoryItemDto.setName(item.getName());
+                  inventoryItemDto.setPrice(item.getPrice());
+                  inventoryItemDto.setStock(item.getStock() + orderItem.getQuantity());
+                  inventoryItemDto.setDescription(item.getDescription());
+                  return webClient.put().uri("/{id}", orderItem.getItemId())
+                      .bodyValue(inventoryItemDto)
+                      .retrieve()
+                      .bodyToMono(Void.class);
+                }), 4) // limit concurrency to avoid overloading inventory service
+        .onErrorMap(e -> new RuntimeException("Failed to restock one or more items", e))
+        .blockLast();
   }
 
+
+  /**
+   * Extracts a {@link Status} value from the provided {@link OrderDto}.
+   * Converts the status string from the order to uppercase and maps it to the corresponding {@link Status} enum value.
+   *
+   * @param order the {@link OrderDto} containing the status string to be converted.
+   * @return the corresponding {@link Status} value based on the status string in the provided {@link OrderDto}.
+   */
   private Status getStatusFromOrderDto(OrderDto order) {
-    return switch (order.getStatus().toUpperCase()) {
+    String status = order.getStatus().toUpperCase(Locale.ROOT);
+    return switch (status) {
       case "CANCELLED" -> Status.CANCELLED;
       case "SHIPPED" -> Status.SHIPPED;
       default -> Status.CONFIRMED;
