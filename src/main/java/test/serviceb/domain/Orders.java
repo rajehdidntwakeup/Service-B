@@ -3,7 +3,6 @@ package test.serviceb.domain;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -52,7 +51,6 @@ public class Orders {
    * Each item in the list corresponds to an instance of the {@link OrderItem} entity.
    * This field is initialized as an empty {@code ArrayList} and can contain multiple {@code OrderItem} objects.
    */
-  @JsonManagedReference
   @OneToMany(mappedBy = "order", orphanRemoval = true, cascade = {CascadeType.PERSIST, CascadeType.MERGE})
   private List<OrderItem> orderItems = new ArrayList<>();
 

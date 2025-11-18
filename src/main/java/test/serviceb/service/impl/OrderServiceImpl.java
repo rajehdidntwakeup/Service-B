@@ -15,7 +15,6 @@ import test.serviceb.domain.Status;
 import test.serviceb.domain.dto.InventoryItemDto;
 import test.serviceb.domain.dto.OrderDto;
 import test.serviceb.domain.dto.OrderItemDto;
-import test.serviceb.repository.OrderItemRepository;
 import test.serviceb.repository.OrdersRepository;
 import test.serviceb.service.OrderService;
 
@@ -27,20 +26,16 @@ public class OrderServiceImpl implements OrderService {
 
   private final WebClient webClient;
   private final OrdersRepository ordersRepo;
-  private final OrderItemRepository orderItemRepo;
 
   /**
    * Constructs an instance of the OrderServiceImpl class.
    *
-   * @param ordersRepo    the OrdersRepository instance used to manage orders.
-   * @param orderItemRepo the OrderItemRepository instance used to manage order items.
-   * @param builder       the WebClient.Builder instance used to configure and build a WebClient for interacting
-   *                      with the inventory API.
+   * @param ordersRepo the OrdersRepository instance used to manage orders.
+   * @param builder    the WebClient.Builder instance used to configure and build a WebClient for interacting
+   *                   with the inventory API.
    */
-  public OrderServiceImpl(OrdersRepository ordersRepo, OrderItemRepository orderItemRepo,
-                          WebClient.Builder builder) {
+  public OrderServiceImpl(OrdersRepository ordersRepo, WebClient.Builder builder) {
     this.ordersRepo = ordersRepo;
-    this.orderItemRepo = orderItemRepo;
     this.webClient = builder.baseUrl("http://localhost:8080/api/inventory").build();
   }
 
@@ -76,7 +71,9 @@ public class OrderServiceImpl implements OrderService {
     Optional<Orders> orderOptional = ordersRepo.findById(orderId);
     if (orderOptional.isPresent()) {
       Orders orderToUpdate = orderOptional.get();
-
+      if (orderToUpdate.getStatus() == Status.CANCELLED) {
+        throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot update a cancelled order");
+      }
       // Update basic fields
       Status status = getStatusFromOrderDto(order);
       if (status != orderToUpdate.getStatus() && status == Status.CANCELLED) {
@@ -84,16 +81,6 @@ public class OrderServiceImpl implements OrderService {
       }
       orderToUpdate.setStatus(getStatusFromOrderDto(order));
       orderToUpdate.setTotalPrice(order.getTotalPrice());
-
-      // Replace order items with those from the request
-      // Using orphanRemoval on Orders.orderItems, clearing the collection will remove old items
-      orderToUpdate.getOrderItems().clear();
-      if (order.getItems() != null) {
-        for (OrderItemDto itemDto : order.getItems()) {
-          OrderItem orderItem = createOrderItem(itemDto);
-          orderToUpdate.addOrderItem(orderItem);
-        }
-      }
       return ordersRepo.save(orderToUpdate);
     }
     return null;
