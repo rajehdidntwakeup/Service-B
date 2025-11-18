@@ -25,9 +25,8 @@ public class GlobalExceptionHandler {
    * Handles MethodArgumentNotValidException and returns an appropriate response entity
    * with detailed validation error messages.
    *
-   * @param exception the MethodArgumentNotValidException thrown when validation fails
-   * @return a ResponseEntity with a body containing the HTTP status code, error message,
-   * and a map of field-specific validation errors
+   * @param exception the MethodArgumentNotValidException thrown when validation fails.
+   * @return a ResponseEntity with a body containing the HTTP status code, and error message.
    */
   @ExceptionHandler(MethodArgumentNotValidException.class)
   public ResponseEntity<Map<String, Object>> handleValidationException(MethodArgumentNotValidException exception) {
