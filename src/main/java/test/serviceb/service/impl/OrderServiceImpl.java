@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Locale;
 import java.util.Optional;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.web.reactive.function.client.WebClient;
@@ -27,6 +28,9 @@ public class OrderServiceImpl implements OrderService {
   private final WebClient webClient;
   private final OrdersRepository ordersRepo;
 
+  @Value("${external.inventory.url}")
+  private String inventoryUrl;
+
   /**
    * Constructs an instance of the OrderServiceImpl class.
    *
@@ -36,7 +40,7 @@ public class OrderServiceImpl implements OrderService {
    */
   public OrderServiceImpl(OrdersRepository ordersRepo, WebClient.Builder builder) {
     this.ordersRepo = ordersRepo;
-    this.webClient = builder.baseUrl("http://localhost:8080/api/inventory").build();
+    this.webClient = builder.baseUrl(inventoryUrl).build();
   }
 
   @Override
