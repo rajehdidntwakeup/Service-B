@@ -1,0 +1,85 @@
+---
+name: Release
+
+on:
+  push:
+    branches:
+      - main
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  release:
+    name: Create Release
+    runs-on: ubuntu-latest
+
+    permissions:
+      contents: write
+      pull-requests: write
+    outputs:
+      release_created: ${{ steps.release.outputs.release_created }}
+      tag_name: ${{ steps.release.outputs.tag_name }}
+
+    steps:
+      - name: Security Audit (Harden Runner)
+        uses: step-security/harden-runner@95d9a5deda9de15063e7595e9719c11c38c90ae2
+        with:
+          egress-policy: 'audit'
+
+      - name: Run Release Please
+        id: release
+        uses: googleapis/release-please-action@v4
+        with:
+          config-file: .release-please-config.json
+          manifest-file: .release-please-manifest.json
+          token: ${{ secrets.GITHUB_TOKEN }}
+
+
+  container:
+    name: Build & Push Container to Harbor
+    runs-on: ubuntu-latest
+    needs: release
+    permissions:
+      contents: write
+      id-token: write
+      packages: write
+      attestations: write
+    if: ${{ needs.release.outputs.tag_name != '' }}
+    strategy:
+      max-parallel: 4
+      matrix:
+        java-version: [ "24" ]
+
+    steps:
+      - name: Checkout Code
+        uses: actions/checkout@v4
+
+      - name: Set up JDK
+        uses: actions/setup-java@v4
+        with:
+          distribution: corretto
+          java-version: 24
+
+      - name: Build App (Maven)
+        run: mvn -B clean package -DskipTests
+
+      - name: Docker Login to Harbor
+        uses: docker/login-action@v3
+        with:
+          registry: ${{ secrets.HARBOR_REGISTRY_URL }}
+          username: ${{ secrets.HARBOR_ROBOT_NAME }}
+          password: ${{ secrets.HARBOR_ROBOT_SECRET }}
+
+      - name: Build Docker Image
+        run: |
+          docker build \
+            -t ${{ secrets.HARBOR_REGISTRY_URL }}/bbb/service-b:${{ needs.release.outputs.tag_name }} \
+            -t ${{ secrets.HARBOR_REGISTRY_URL }}/bbb/service-b:latest \
+            .
+
+      - name: Push Docker Image to Harbor
+        run: |
+          docker push ${{ secrets.HARBOR_REGISTRY_URL }}/bbb/service-b:${{ needs.release.outputs.tag_name }}
+          docker push ${{ secrets.HARBOR_REGISTRY_URL }}/bbb/service-b:latest
