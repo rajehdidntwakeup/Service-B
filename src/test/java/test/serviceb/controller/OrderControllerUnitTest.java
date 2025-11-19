@@ -35,6 +35,37 @@ import test.serviceb.domain.Status;
 import test.serviceb.domain.dto.OrderDto;
 import test.serviceb.service.OrderService;
 
+/**
+ * Unit tests for the {@code OrderController} class.
+ * This class utilizes Spring's {@code @WebMvcTest} for testing the {@code OrderController} in isolation
+ * by mocking its dependencies and controlling the HTTP layer.
+ * The tests cover various scenarios and endpoints of the {@code OrderController}:
+ * - POST /api/order: Testing order creation.
+ * - Verifies correct creation with valid data.
+ * - Handles validation errors such as blank status or negative total price.
+ * - Validates request content types and malformed JSON inputs.
+ * - GET /api/order: Testing fetching all orders.
+ * - Verifies response when orders exist.
+ * - Handles cases where no orders are available, ensuring the response is an empty array.
+ * - GET /api/order/{id}: Testing fetching a single order by ID.
+ * - Verifies successful retrieval when the order exists.
+ * - Handles scenarios where the order does not exist, returning 404.
+ * - Ensures non-numeric IDs are rejected with a 400 status (Bad Request).
+ * - PUT /api/order/{id}: Testing updating an existing order by ID.
+ * - Verifies successful updates with valid data.
+ * - Handles scenarios where the target order does not exist, returning 404.
+ * - Validates input data, ensuring blank status or negative total price returns 400 (Bad Request).
+ * The {@code MockMvc} framework is used to simulate HTTP requests and validate responses,
+ * while {@code ObjectMapper} is used to handle JSON serialization/deserialization.
+ * Mocked dependencies:
+ * - {@code OrderService}: Mocked to simulate service-level behavior and validate interactions.
+ * Edge cases are tested to ensure proper error handling and validation for incorrect inputs, including:
+ * - Invalid or malformed JSON requests.
+ * - Requests with missing or unsupported Content-Type headers.
+ * - Validation errors on order DTO fields.
+ * These tests aim to provide comprehensive coverage of the controller's methods, ensuring correct functionality,
+ * validation, and error handling in varying scenarios.
+ */
 @WebMvcTest(controllers = OrderController.class)
 @AutoConfigureMockMvc(addFilters = false) // disable Spring Security filters for controller slice tests
 class OrderControllerUnitTest {
