@@ -9,7 +9,7 @@
     </parent>
     <groupId>test</groupId>
     <artifactId>service-B</artifactId>
-    <version>1.0.1-SNAPSHOT</version>
+    <version>1.0.1</version>
     <name>service-B</name>
     <description>service-B</description>
     <url/>
