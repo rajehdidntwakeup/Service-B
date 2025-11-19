@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.0.2](https://github.com/rajehdidntwakeup/Service-B/compare/v1.0.1...v1.0.2) (2025-11-19)
+
+
+### Miscellaneous Chores
+
+* **config:** enable patch pre-release bump in release-please config ([99e55ae](https://github.com/rajehdidntwakeup/Service-B/commit/99e55ae6045bcb9acaba5f3babaf22e31a26dc12))
+* **config:** enable patch pre-release bump in release-please config ([55969ff](https://github.com/rajehdidntwakeup/Service-B/commit/55969ff1c12fbb52313bfad99133c4011594e4e5))
+* **config:** enable snapshot updates in release-please config ([a458755](https://github.com/rajehdidntwakeup/Service-B/commit/a458755ddffe7da8eddcaacf463b9f09224250c0))
+* **config:** enable snapshot updates in release-please config ([d343a0f](https://github.com/rajehdidntwakeup/Service-B/commit/d343a0f64a4210705fd229b8dea30232c0ac33a6))
+* **config:** remove snapshot updates and patch pre-release bump in release-please config ([a61bff2](https://github.com/rajehdidntwakeup/Service-B/commit/a61bff2c593b7f1d3f25c20d8a0cf7e88a3ed145))
+* **config:** remove snapshot updates and patch pre-release bump in release-please config ([fb712c9](https://github.com/rajehdidntwakeup/Service-B/commit/fb712c9f5aa26a297133c287505e54720071b110))
+* **config:** skip snapshot updates in release-please config ([6313304](https://github.com/rajehdidntwakeup/Service-B/commit/63133040ab3a2d6a8d7a8292bdce5e6840933649))
+* **deps:** downgrade service-B to version 1.0.1 ([5a510f8](https://github.com/rajehdidntwakeup/Service-B/commit/5a510f8255566fb0f540409a355d2f4db177898a))
+* **deps:** release service-B version 1.0.2 final ([6d9b371](https://github.com/rajehdidntwakeup/Service-B/commit/6d9b371e84d26349ca5af1e248dcf78ce75ea6fc))
+* **main:** release 1.0.2-SNAPSHOT ([8f5fbc2](https://github.com/rajehdidntwakeup/Service-B/commit/8f5fbc29dfea64c19e4b2fad25da9fd1d8598cd6))
+* **main:** release 1.0.2-SNAPSHOT ([8b02bb5](https://github.com/rajehdidntwakeup/Service-B/commit/8b02bb572c8842ae7fda24fdf37f4c18cd8e0911))
+
 ## [1.0.1](https://github.com/rajehdidntwakeup/Service-B/compare/v1.0.1-SNAPSHOT...v1.0.1) (2025-11-19)
 
 
