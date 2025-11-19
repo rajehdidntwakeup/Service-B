@@ -12,8 +12,6 @@
       "pull-request-header": "This PR prepares the next release by updating versions and changelog entries following conventional commits. Please review and merge to publish the release.",
       "label": "release",
       "changelog-type": "default",
-      "update-snapshots": true,
-      "bump-patch-pre-release": true,
       "changelog-sections": [
         {
           "type": "feat",
