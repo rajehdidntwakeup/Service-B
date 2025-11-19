@@ -1,5 +1,13 @@
 # Changelog
 
+## [1.0.3](https://github.com/rajehdidntwakeup/Service-B/compare/v1.0.2...v1.0.3) (2025-11-19)
+
+
+### Miscellaneous Chores
+
+* **build:** remove redundant whitespace in `pom.xml` ([9f29390](https://github.com/rajehdidntwakeup/Service-B/commit/9f29390c407b5934007d7096c9e286a3819a32c2))
+* **deps:** update service-B to version 1.0.3-SNAPSHOT ([ec16f32](https://github.com/rajehdidntwakeup/Service-B/commit/ec16f3246fa5f9252de5d7d035453f2a898c1069))
+
 ## [1.0.2](https://github.com/rajehdidntwakeup/Service-B/compare/v1.0.1...v1.0.2) (2025-11-19)
 
 
