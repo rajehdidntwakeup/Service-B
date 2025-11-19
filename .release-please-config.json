@@ -11,6 +11,7 @@
       "pull-request-title-pattern": "chore(release): release ${version}",
       "pull-request-header": "This PR prepares the next release by updating versions and changelog entries following conventional commits. Please review and merge to publish the release.",
       "label": "release",
+      "skip-snapshot": true,
       "changelog-type": "default",
       "changelog-sections": [
         {
