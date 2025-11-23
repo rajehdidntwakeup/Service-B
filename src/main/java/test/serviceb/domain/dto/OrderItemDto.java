@@ -1,7 +1,8 @@
 package test.serviceb.domain.dto;
 
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Positive;
+import jakarta.validation.constraints.PositiveOrZero;
 
 /**
  * Represents a Data Transfer Object (DTO) for an item in an order.
@@ -10,13 +11,13 @@ import jakarta.validation.constraints.NotBlank;
  */
 public class OrderItemDto {
 
-  @Min(value = 0, message = "Item ID must be non-negative")
+  @Positive(message = "Item ID must be provided & non-negative")
   private int itemId;
   @NotBlank(message = "Item name must be provided")
   private String itemName;
-  @Min(value = 0, message = "Price must be non-negative")
+  @PositiveOrZero(message = "Price must be provided & non-negative")
   private double price;
-  @Min(value = 1, message = "Quantity must be greater than zero")
+  @Positive(message = "Quantity must be provided & non-negative")
   private int quantity;
 
   /**
