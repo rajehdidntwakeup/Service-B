@@ -4,10 +4,23 @@
 [![Maven](https://img.shields.io/badge/Maven-3.9+-blue.svg)](https://maven.apache.org/)
 [![Spring Boot](https://img.shields.io/badge/Spring%20Boot-3.5.6-brightgreen)](https://spring.io/projects/spring-boot)
 
+[![Verify CI](https://github.com/fhburgenland-bswe/swm2-ws2025-group-a-order/actions/workflows/verify.yml/badge.svg?branch=main)](https://github.com/fhburgenland-bswe/swm2-ws2025-group-a-order/actions/workflows/verify.yml)
+
 ## Project Overview
 
 The **Order Service** is a core backend component of a webshop system.  
 It manages and provides details for all orders made, including:
+
+### Architecture
+
+The project follows a clean-layered architecture:
+
+```
+├── Controller Layer    - REST API endpoints
+├── Service Layer       - Business logic
+├── Repository Layer    - Data access
+└── Domain Layer        - Entities and DTOs
+```
 
 ### Order Details
 
@@ -24,6 +37,10 @@ It manages and provides details for all orders made, including:
 - **ItemName** - Name of the product ordered
 - **Quantity** – Quantity of the product ordered
 - **Price** – Unit price of the product
+
+### Order ER Diagram
+
+![Order ER diagram](docs/OrderER.png)
 
 The service is built with **Java 24** and **Maven**, following a modular, RESTful design.  
 It can be integrated into a larger microservice-based webshop architecture or used as a standalone component.
@@ -52,6 +69,35 @@ It can be integrated into a larger microservice-based webshop architecture or us
 
 4. Access the API:
    http://localhost:8081/api/order
+
+5. Endpoint:
+
+| Method | Endpoint          | Description        |
+|--------|-------------------|--------------------|
+| `POST` | `/api/order`      | Create new order   |
+| `GET`  | `/api/order`      | Get all orders     |
+| `GET`  | `/api/order/{id}` | Get order by ID    |
+| `PUT`  | `/api/order/{id}` | Update order by ID |
+
+---
+
+## CI/CD Status and Workflow (GitHub Actions)
+
+- Status: see the badge at the top of this README. Clicking it opens the workflow run history.
+- Workflow file: `.github/workflows/verify.yml` (name: "Verify").
+- Triggers: on pull requests to `main`.
+- Jobs overview:
+    - Conform: validates commit messages and PR metadata.
+    - Checkstyle: runs `mvn clean verify checkstyle:check` on Java 24 (Corretto) and fails on violations.
+    - PMD: runs `mvn pmd:check pmd:pmd` and uploads `target/pmd.xml` artifacts.
+    - SpotBugs: runs `mvn spotbugs:check` and generates SpotBugs reports.
+    - Hadolint: lints `Dockerfile` (skipped if no Dockerfile).
+
+To run a similar verification locally:
+
+```bash
+mvn -B clean verify
+```
 
 ## Code Style: Checkstyle
 
@@ -187,6 +233,160 @@ If you want to verify your `Dockerfile` locally with Hadolint:
     ```
 
 Hadolint ensures that Docker images are built following best practices to optimize size, security, and build speed.
+
+## Container Build \& Push (CI)
+
+This project builds and pushes Docker images in CI only if the Dockerfile linting check (`Run Hadolint`) completed
+successfully.
+The related job in `verify.yml` is named `Containerization and Push to Harbor` and has `needs: build & hadolint`, so
+only lint-checked Dockerfiles are used for image builds.
+
+### Purpose
+
+- Ensure only lint-verified Dockerfiles are used for images (security \& quality).
+- Automatically build the JAR, build the image, tag it, and push it to the registry.
+
+### CI Flow
+
+1. Build the JAR with Maven: `mvn clean package -DskipTests`
+2. CI logs into the container registry (authentication via Secrets).
+3. The Docker image is built and tagged with two tags:
+    - Commit SHA: `${{ github.sha }}`
+4. Both tags are pushed to the registry.
+5. The pipeline outputs the registry URL with the Commit SHA to confirm availability.
+
+### Required GitHub Secrets
+
+- `HARBOR_REGISTRY_URL` — target registry URL (e.g. `registry.example.com/project/name`)
+- `HARBOR_ROBOT_NAME` — username / robot for login
+- `HARBOR_ROBOT_SECRET` — password / secret for login
+
+### Local testing
+
+   ```bash
+   mvn clean package -DskipTests
+
+   docker login <registry> -u <user> -p <password>
+   docker build -t <registry>:latest -t <registry>:<commit-sha> .
+   docker push <registry>:<commit-sha>
+   ```
+
+## Production Configuration
+
+Configure PostgreSQL for production:
+
+```properties
+spring.datasource.url=${DB_URL}
+spring.datasource.username=${DB_USERNAME}
+spring.datasource.password=${DB_PASSWORD}
+spring.jpa.database-platform=org.hibernate.dialect.PostgreSQLDialect
+```
+
+### Security Configuration
+
+This project uses Spring Security to configure the application's HTTP security and CORS policies.
+The `SecurityConfig` class is responsible for defining these configurations.
+
+#### Key Features:
+
+1. **HTTP Security**:
+    - CSRF protection is disabled to simplify API interactions.
+    - CORS (Cross-Origin Resource Sharing) is enabled to allow communication from multiple origins.
+    - Specific requests are explicitly permitted:
+        - /api/order/** (API endpoints for order services)
+        - /h2-console/** (for development environments using the H2 database console—enabled with same-origin frame
+          settings).
+2. **Custom CORS Configurations**:
+    - All origins (`*`) are allowed.
+    - Allowed `HTTP` methods: `GET`, `POST`, `PUT`.
+    - All headers are allowed, and certain headers are exposed (`Authorization`, `Link`).
+    - Credentials are supported for cross-origin requests.
+    - Preflight request max age set to 3600 seconds.
+
+#### Configuration Beans:
+
+- `SecurityFilterChain`: Defines the security filter chain for handling HTTP requests.
+- `CorsConfigurationSource`: Provides the CORS configuration for the application.
+
+This configuration ensures that the application is secure while allowing flexibility for frontend clients and external
+systems to interact with the API seamlessly.
+
+#### Development Notes:
+
+- The `SecurityConfig` class includes settings for enabling the H2 console UI by allowing its frames (`same-origin`
+  policy).
+- You can modify or extend the security rules as needed by changing the `authorizeHttpRequests` section.
+
+### Configuration
+
+#### Environment Variables
+
+- `DB_USERNAME` - Database username
+- `DB_PASSWORD` - Database password
+- `DB_URL` - Database URL
+
+## Local & testing Configuration
+
+Configure H2 for local & testing:
+
+Local run (Windows — PowerShell)
+
+```bash
+export DB_URL='jdbc:postgresql://<host>:<port>/<dbname>?sslmode=require'
+export DB_USERNAME='<user>'
+export DB_PASSWORD='<pass>'
+mvn spring-boot:run -Dspring-boot.run.profiles=prod
+```
+
+Run tests (H2)
+
+```bash
+mvn -Dspring.profiles.active=test test
+```
+
+## Automated Release Management (Release Please)
+
+This project uses Release Please, a Google-maintained automation tool, to manage versioning, changelog generation,
+GitHub Releases, and automated container publishing.
+
+The release workflow is fully automated and triggers whenever a pull request is merged into the `main` branch.
+
+### Automated Versioning & Tag Creation
+
+The release workflow determines the next version based on Conventional Commit prefixes found in merged pull requests.
+
+Release Please creates a Git tag in the format: `v1.0.0`
+
+### GitHub Release Creation
+
+- Once the release PR is merged:
+- A GitHub Release is created automatically.
+- The release notes include the generated changelog sections.
+- The version tag (e.g., `v1.0.0`) is attached.
+
+### Automated Container Build & Publish
+
+#### After tagging:
+
+- The Maven project is built from the release commit.
+- A Container image is generated.
+- The image is pushed to your Harbor registry using the version tag.
+
+This guarantees each release is paired with a reproducible, versioned container image.
+
+### Automatic CHANGELOG.md Generation
+
+Release Please updates CHANGELOG.md using our custom configuration:
+
+| Commit Prefix | Changelog Section      | Visible    |
+|---------------|------------------------|------------|
+| `feat:`       | Feature                | ✔️         |
+| `fix:`        | Bug Fixes              | ✔️         |
+| `chore:`      | Miscellaneous Chores   | ✔️         |
+| `docs:`       | Documentation          | ❌ (hidden) |
+| `ci:`         | Continuous Integration | ❌ (hidden) |
+
+Only visible sections appear in the published changelog.
 
 ## LICENSE
 

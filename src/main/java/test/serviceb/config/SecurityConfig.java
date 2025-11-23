@@ -37,7 +37,7 @@ public class SecurityConfig {
         .csrf(AbstractHttpConfigurer::disable)
         .cors(Customizer.withDefaults())
         .authorizeHttpRequests(auth -> auth
-            .requestMatchers("/cats/**", "/h2-console/**").permitAll()
+            .requestMatchers("/api/inventory/**", "/h2-console/**").permitAll()
             .anyRequest().permitAll()
         );
 
