@@ -230,7 +230,6 @@ public class OrderServiceImplEdgeCaseUnitTest {
     assertEquals(12.3, updated.getTotalPrice());
   }
 
-
   private void mockWebClientGetReturnsItem(Item item) {
     when(webClient.get()
         .uri(anyString(), any(), any())
