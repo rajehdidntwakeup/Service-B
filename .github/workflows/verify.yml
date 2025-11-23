@@ -83,9 +83,6 @@ jobs:
             ${{ runner.os }}-maven-
 
       - name: Run PMD Analysis
-        run: mvn --batch-mode clean pmd:check
-
-      - name: Run PMD Analysis
         run: mvn --batch-mode clean pmd:check pmd:pmd
 
       - name: Show PMD results in workflow
