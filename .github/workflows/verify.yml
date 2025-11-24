@@ -182,7 +182,7 @@ jobs:
         run: mvn -B clean compile
 
   hadolint:
-    name: Hadolint
+    name: Run Hadolint
     runs-on: ubuntu-latest
 
     steps:
@@ -217,6 +217,7 @@ jobs:
           hadolint Dockerfile --failure-threshold error
 
   container-build:
+    name: Containerization and Push to Harbor
     runs-on: ubuntu-latest
     needs:
       - build

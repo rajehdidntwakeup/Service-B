@@ -3,8 +3,10 @@ package test.serviceb.domain.dto;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.validation.constraints.Min;
+import jakarta.validation.Valid;
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotEmpty;
+import jakarta.validation.constraints.Positive;
 
 /**
  * Represents a Data Transfer Object (DTO) for an order.
@@ -13,10 +15,12 @@ import jakarta.validation.constraints.NotBlank;
  */
 public class OrderDto {
 
-  @Min(value = 0, message = "Total price must be non-negative")
+  @Positive(message = "Total price must be provided & non-negative")
   private double totalPrice;
   @NotBlank(message = "Status must be provided")
   private String status;
+  @Valid
+  @NotEmpty(message = "At least one item is required")
   private List<OrderItemDto> items = new ArrayList<>();
 
   /**
