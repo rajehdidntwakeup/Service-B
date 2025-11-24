@@ -143,7 +143,6 @@ public class OrderServiceImpl implements OrderService {
    * @param order the order containing items to be restocked with their respective quantities.
    */
   private void restockOrderItems(Orders order) {
-    // Reuse a single DTO instance to comply with PMD's AvoidInstantiatingObjectsInLoops rule
     InventoryItemDto inventoryItemDto = new InventoryItemDto();
     for (OrderItem orderItem : order.getOrderItems()) {
       WebClient webClient = getWebClient(orderItem.getItemName());

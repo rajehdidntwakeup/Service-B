@@ -319,6 +319,43 @@ systems to interact with the API seamlessly.
 
 ### Configuration
 
+#### External Inventory Integration
+
+The Order Service can call multiple external inventory providers.
+Providers are configured via Spring Boot properties under the prefix `external.inventory` and bound to
+`test.serviceb.service.converter.ConversionProperties`.
+
+- Prefix: `external.inventory`.
+- Key: `external-inventory-<name>`.
+- Value: `<name>,<url>`
+  Example:
+- Application Properties:
+    - `external.inventory.external-inventory-a=inventory-a,https://alpha.example.com/api/inventory`
+- When Running the service Image:
+- ```bash 
+  docker run -e external.inventory.external-inventory-a=inventory-a,https://alpha.example.com/api/inventory
+  ```
+
+**⚠️ IMPORTANT NOTE ⚠️**
+
+The Items in the External Inventory Service must have a unique ID, and the name of the Item must start or at least have
+the service name in it, to avoid conflicts with other services.
+This way it is assured that the order service is able to handle items from different services that share the same id,
+as long as the service names differ.
+
+##### Example:
+
+For the External Inventory Service `inventory-a` the name of an Item should look like this:
+
+``` json
+{
+    "name": "inventory-a: Sunset over the mountains",
+    "stock": 15,
+    "price": 49.99,
+    "description": "A beautiful high-resolution photograph."
+}
+```
+
 #### Environment Variables
 
 - `DB_USERNAME` - Database username
