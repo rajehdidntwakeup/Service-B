@@ -1,0 +1,29 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: order
+  labels:
+    app.kubernetes.io/name: order
+    app.kubernetes.io/instance: order
+    app.kubernetes.io/component: service
+  annotations:
+    external-dns.alpha.kubernetes.io/provider: public
+    external-dns.alpha.kubernetes.io/target: 178.63.69.250,2a01:4f8:121:14e2:100:3:3:1
+    cert-manager.io/cluster-issuer: cluster-issuer-muehlbachler-xyz
+spec:
+  tls:
+    - hosts:
+        - order.group-a.student.bswe.hochschule-burgenland.muehlbachler.xyz
+      secretName: bswe-group-a-order-tls
+  rules:
+    - host: order.group-a.student.bswe.hochschule-burgenland.muehlbachler.xyz
+      http:
+        paths:
+          - path: /
+            pathType: Prefix
+            backend:
+              service:
+                name: order
+                port:
+                  number: 8080

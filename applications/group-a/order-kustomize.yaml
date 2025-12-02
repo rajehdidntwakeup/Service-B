@@ -1,0 +1,19 @@
+---
+apiVersion: argoproj.io/v1alpha1
+kind: Application
+metadata:
+  name: group-a-order
+spec:
+  project: bswe-group-a
+  source:
+    path: applications/group-a/order
+    repoURL: https://github.com/fhburgenland-bswe/swm2-ws2025-kubernetes-applications.git
+    targetRevision: HEAD
+  destination:
+    namespace: bswe-group-a
+    server: https://kubernetes.default.svc
+  syncPolicy:
+    automated:
+      prune: true
+      allowEmpty: true
+      selfHeal: true
