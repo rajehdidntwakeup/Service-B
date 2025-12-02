@@ -25,6 +25,7 @@ policies:
           - docs
           - no_type
         scopes:
+          - order
           - config
           - service
           - repository
