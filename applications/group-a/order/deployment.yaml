@@ -27,6 +27,27 @@ spec:
           ports:
             - containerPort: 8080
               name: http
+          env:
+            - name: DB_URL
+              value: "jdbc:postgres://group-a-order-orderservice1.b.aivencloud.com:24328/defaultdb?sslmode=require"
+            - name: DB_USERNAME
+              value: "avnadmin"
+            - name: DB_PASSWORD
+              value: "AVNS_ONyljJIbjo2ah5Tkses"
+            - name: EXTERNAL_SERVICE_NAME_1
+              value: "A"
+            - name: EXTERNAL_SERVICE_NAME_2
+              value: "D"
+            - name: EXTERNAL_SERVICE_NAME_3
+              value: "E"
+            - name: EXTERNAL_SERVICE_URL_1
+              value: "inventory.group-a.student.bswe.hochschule-burgenland.muehlbachler.xyz/api/inventory"
+            - name: EXTERNAL_SERVICE_URL_2
+              value: "inventory.group-d.student.bswe.hochschule-burgenland.muehlbachler.xyz/api/inventory"
+            - name: EXTERNAL_SERVICE_URL_3
+              value: "inventory.group-e.student.bswe.hochschule-burgenland.muehlbachler.xyz/api/inventory"
+            - name: JAVA_TOOL_OPTIONS
+              value: "-Xmx256m -XX:MaxMetaspaceSize=128m -XX:ReservedCodeCacheSize=64m -XX:MaxRAMPercentage=75.0 -XX:MinRAMPercentage=50.0"
           resources:
             requests:
               cpu: 100m
