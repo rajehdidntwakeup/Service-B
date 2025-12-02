@@ -85,7 +85,6 @@ public class OrderServiceImpl implements OrderService {
       if (orderToUpdate.getStatus() == Status.CANCELLED) {
         throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Cannot update a cancelled order");
       }
-      // Update basic fields
       Status status = getStatusFromOrderDto(order);
       if (status != orderToUpdate.getStatus() && status == Status.CANCELLED) {
         restockOrderItems(orderToUpdate);
