@@ -345,11 +345,11 @@ as long as the service names differ.
 
 ##### Example:
 
-For the External Inventory Service `inventory-a` the name of an Item should look like this:
+For the External Inventory Service `inventory-A` the name of an Item should look like this:
 
 ``` json
 {
-    "name": "inventory-a: Sunset over the mountains",
+    "name": "inventory-A: Sunset over the mountains",
     "stock": 15,
     "price": 49.99,
     "description": "A beautiful high-resolution photograph."
