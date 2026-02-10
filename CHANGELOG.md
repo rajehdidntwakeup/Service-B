@@ -1,5 +1,22 @@
 # Changelog
 
+## [1.0.4](https://github.com/rajehdidntwakeup/Service-B/compare/v1.0.3...v1.0.4) (2025-11-23)
+
+
+### Miscellaneous Chores
+
+* **main:** release 1.0.4-SNAPSHOT ([8bddb7f](https://github.com/rajehdidntwakeup/Service-B/commit/8bddb7fd5ffe9432606a9350ecd60b4ccb221d71))
+* **main:** release 1.0.4-SNAPSHOT ([02fc692](https://github.com/rajehdidntwakeup/Service-B/commit/02fc6928673c95d2771cc430903e1f8d9a33b2cb))
+* **test:** add documentation to `contextLoads` test in Service B ([be6bfaf](https://github.com/rajehdidntwakeup/Service-B/commit/be6bfaf7acd25acc9d553b2878ed8cf794b6d394))
+* **test:** add documentation to `contextLoads` test in Service B ([b58bcc0](https://github.com/rajehdidntwakeup/Service-B/commit/b58bcc0cc7e2aa60c3f55a512d3d7882cb7f6da4))
+* **test:** add documentation to `OrderControllerUnitTest` in Service B ([465dc87](https://github.com/rajehdidntwakeup/Service-B/commit/465dc87a63473c935307b6351889acc760f4c84f))
+* **verify:** update PMD analysis step in verify.yml ([7e5c411](https://github.com/rajehdidntwakeup/Service-B/commit/7e5c4113523c7b1415770805c2a99aa56fd00613))
+
+
+### Documentation
+
+* **license:** add LICENSE and README files for project documentation ([f46fea2](https://github.com/rajehdidntwakeup/Service-B/commit/f46fea2474f54b6a1759c9205923a60cfebb0141))
+
 ## [1.0.3](https://github.com/rajehdidntwakeup/Service-B/compare/v1.0.2...v1.0.3) (2025-11-19)
 
 
